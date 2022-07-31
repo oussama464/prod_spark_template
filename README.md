@@ -48,3 +48,7 @@ in main.py the jobs to run are imported dynamically using import lib package
 
 ## tests 
 to be able to run tests we build an src package using setup.py and pip install it in venv in develop mode ie (pip install -e .)
+
+### final notes 
+*  all commands to build this package are in a `Makefile`
+* see also : [youtube](https://www.youtube.com/watch?v=Bp0XvA3wIXw&t=1370s) and [repo](https://github.com/pchrabka/PySpark-PyData)
