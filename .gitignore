@@ -1,4 +1,7 @@
-*__pycache__
+**/__pycache__
 .vscode 
 *.pytest_cache
-venv 
+.venv
+*/libs/*
+**/*.egg-info
+dist

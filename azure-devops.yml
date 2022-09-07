@@ -1,0 +1,36 @@
+trigger:
+  - master
+pool:
+  vmImage: "ubuntu-latest"
+stages:
+  - stage: Archive
+    displayName: Archive Stage
+    jobs:
+      - job: ARCHIVE
+        strategy:
+          matrix:
+            python38:
+              python.version: "3.8"
+
+        displayName: archive job
+        steps:
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: "$(python.version)"
+          - script: |
+              python -m pip install --upgrade pip 
+              rm -rf ./dist && rm -rf ./src/libs/* && mkdir ./dist 
+              pip install -r requirements.txt -t ./src/libs 
+              cp ./src/main.py ./dist 
+              cp ./src/config.ini ./dist 
+              zip -r dist/jobs.zip ./src/jobs 
+              zip -r dist/shared.zip ./src/shared 
+              zip -r -D dist/libs.zip ./src/libs
+          - task: CopyFiles@2
+            inputs:
+              Contents: "dist/*"
+              TargetFolder: "$(build.artifactstagingdirectory)"
+            displayName: copy dist folder contents into stagingdir
+          - publish: $(Build.ArtifactStagingDirectory)
+            artifact: "dist"
+            displayName: publish build artifacts
