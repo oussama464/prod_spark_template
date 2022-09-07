@@ -14,7 +14,7 @@ def _parse_arguments():
 def main():
     args = _parse_arguments()
     """ Main function executed by spark submit command"""
-    configs_module = importlib.import_module(f"shared.config")
+    configs_module = importlib.import_module("shared.config")
     configs = configs_module.get_configs("config.ini", "movies_app")
     spark = SparkSession.builder.appName(configs.get("app_name")).getOrCreate()
 
