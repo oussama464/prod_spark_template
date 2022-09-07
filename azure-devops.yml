@@ -24,9 +24,7 @@ stages:
               pip install -r requirements.txt -t ./src/libs 
               cp ./src/main.py ./dist 
               cp ./src/config.ini ./dist 
-              zip -r dist/jobs.zip ./src/jobs 
-              zip -r dist/shared.zip ./src/shared 
-              zip -r -D dist/libs.zip ./src/libs
+              cd ./src/ && zip -r ../dist/shared.zip shared && zip -r ../dist/jobs.zip jobs && zip -r -D ../dist/libs.zip libs
           - task: CopyFiles@2
             inputs:
               Contents: "dist/*"
@@ -36,6 +34,8 @@ stages:
             artifact: "dist"
             displayName: publish build artifacts
   - stage: Deploy
+    dependsOn: Archive
+    condition: succeeded()
     displayName: Deploy to local agent
     jobs:
       - job: DEPLOY
@@ -49,3 +49,5 @@ stages:
               cd $(Pipeline.Workspace)/dist/dist 
               spark-submit --master yarn --py-files jobs.zip,shared.zip --files config.ini main.py  --job movies
             displayName: Run spark movies job
+          - script: hdfs dfs -ls data/output
+            displayName: check job success
