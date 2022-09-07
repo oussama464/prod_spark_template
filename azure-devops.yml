@@ -1,12 +1,13 @@
 trigger:
   - master
-pool:
-  vmImage: "ubuntu-latest"
+
 stages:
   - stage: Archive
     displayName: Archive Stage
     jobs:
       - job: ARCHIVE
+        pool:
+          vmImage: "ubuntu-latest"
         strategy:
           matrix:
             python38:
@@ -34,3 +35,15 @@ stages:
           - publish: $(Build.ArtifactStagingDirectory)
             artifact: "dist"
             displayName: publish build artifacts
+  - stage: Deploy
+    displayName: Deploy to local agent
+    jobs:
+      - job: DEPLOY
+        pool:
+          name: droplet
+        steps:
+          - download: current
+            artifact: dist
+            displayName: Download current build artifact
+          - script: |
+              ls $(Pipeline.Workspace)/dist/
