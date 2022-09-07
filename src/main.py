@@ -1,7 +1,7 @@
 import importlib
 import argparse
 from pyspark.sql import SparkSession
-from parse import parse
+#from parse import parse
 
 
 def _parse_arguments():
