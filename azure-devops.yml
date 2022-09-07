@@ -46,4 +46,6 @@ stages:
             artifact: dist
             displayName: Download current build artifact
           - script: |
-              ls $(Pipeline.Workspace)/dist/
+              cd $(Pipeline.Workspace)/dist/dist 
+              spark-submit --master yarn --py-files jobs.zip,shared.zip --files config.ini main.py  --job movies
+            displayName: Run spark movies job
